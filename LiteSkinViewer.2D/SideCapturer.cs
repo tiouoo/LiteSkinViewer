@@ -61,7 +61,7 @@ public sealed class SideCapturer : ICapturer
                 dst.Height * scale
             );
 
-            canvas.DrawBitmap(image, src, dstScaled);
+            canvas.DrawBitmap(image, src, dstScaled, SKSamplingOptions.Default);
         }
 
         foreach (var (src, dst) in topLayers)
@@ -73,7 +73,7 @@ public sealed class SideCapturer : ICapturer
                 dst.Height * scale
             );
 
-            canvas.DrawBitmap(image, src, dstScaled);
+            canvas.DrawBitmap(image, src, dstScaled, SKSamplingOptions.Default);
         }
 
         return result;

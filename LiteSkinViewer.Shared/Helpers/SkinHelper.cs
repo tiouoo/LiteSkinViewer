@@ -15,7 +15,7 @@ public static class SkinHelper
     {
         using var stream = new MemoryStream();
 
-        bitmap.Save(stream);
+        bitmap.Save(stream, PngBitmapEncoderOptions.Default);
         stream.Position = 0;
 
         return SKBitmap.Decode(stream);

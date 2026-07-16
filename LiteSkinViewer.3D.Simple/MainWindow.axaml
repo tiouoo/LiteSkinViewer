@@ -17,11 +17,11 @@
                        FontSize="14"
                        FontWeight="SemiBold" />
 
-            <TextBox Watermark="皮肤路径"
+            <TextBox PlaceholderText="皮肤路径"
                      Name="PART_SkinTextBox" />
 
             <TextBox Margin="0 0 0 8"
-                     Watermark="披风路径"
+                      PlaceholderText="披风路径"
                      Name="PART_CapeTextBox" />
 
             <TextBlock Text="抗锯齿设置"
