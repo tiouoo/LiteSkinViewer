@@ -21,6 +21,7 @@ public abstract class SkinViewerBase
     protected Vector2 _diffXY;
     protected float _dis = 1;
     protected bool _enableCape;
+    protected bool _enableLighting = true;
     protected bool _enableTop;
     protected bool _enableTopLayer3D;
 
@@ -56,6 +57,8 @@ public abstract class SkinViewerBase
     protected double _time;
 
     protected Vector2 _xy;
+
+    protected Vector2 _maxPanOffset = new(3f, 3f);
 
     public SkinViewerBase()
     {
@@ -149,6 +152,24 @@ public abstract class SkinViewerBase
             _enableCape = value;
             _switchType = true;
         }
+    }
+
+    /// <summary>
+    ///     是否启用光照
+    /// </summary>
+    public bool EnableLighting
+    {
+        get => _enableLighting;
+        set => _enableLighting = value;
+    }
+
+    /// <summary>
+    ///     右键平移的最大偏移量
+    /// </summary>
+    public Vector2 MaxPanOffset
+    {
+        get => _maxPanOffset;
+        set => _maxPanOffset = new Vector2(MathF.Max(0, value.X), MathF.Max(0, value.Y));
     }
 
     /// <summary>
@@ -253,8 +274,8 @@ public abstract class SkinViewerBase
         }
         else if (type == PointerType.PointerRight)
         {
-            _xy.X = -(_lastXY.X - point.X) / 100 + _saveXY.X;
-            _xy.Y = (_lastXY.Y - point.Y) / 100 + _saveXY.Y;
+            _xy.X = Math.Clamp(-(_lastXY.X - point.X) / 100 + _saveXY.X, -_maxPanOffset.X, _maxPanOffset.X);
+            _xy.Y = Math.Clamp((_lastXY.Y - point.Y) / 100 + _saveXY.Y, -_maxPanOffset.Y, _maxPanOffset.Y);
         }
     }
 

@@ -118,6 +118,8 @@ public class OpenGLSkinViewerBase : SkinViewerBase
         _gl.Enable(_gl.GL_DEPTH_TEST);
         _gl.ActiveTexture(_gl.GL_TEXTURE0);
         _gl.UseProgram(_programId);
+        var enableLightingLoc = _gl.GetUniformLocation(_programId, "u_enableLighting");
+        _gl.Uniform1i(enableLightingLoc, EnableLighting ? 1 : 0);
 
         SetupMatrices();
 

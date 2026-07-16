@@ -34,6 +34,12 @@ public sealed class SkinViewer3D : OpenGlControlBase, ICustomHitTest
     public static readonly StyledProperty<bool> IsTopLayer3DProperty =
         AvaloniaProperty.Register<SkinViewer3D, bool>(nameof(IsTopLayer3D), false);
 
+    public static readonly StyledProperty<bool> IsLightingEnabledProperty =
+        AvaloniaProperty.Register<SkinViewer3D, bool>(nameof(IsLightingEnabled), true);
+
+    public static readonly StyledProperty<Vector2> MaxPanOffsetProperty =
+        AvaloniaProperty.Register<SkinViewer3D, Vector2>(nameof(MaxPanOffset), new Vector2(3f, 3f));
+
     public static readonly StyledProperty<SkinRenderMode> RenderModeProperty =
         AvaloniaProperty.Register<SkinViewer3D, SkinRenderMode>(nameof(RenderMode), SkinRenderMode.FXAA);
 
@@ -99,6 +105,18 @@ public sealed class SkinViewer3D : OpenGlControlBase, ICustomHitTest
     {
         get => GetValue(IsTopLayer3DProperty);
         set => SetValue(IsTopLayer3DProperty, value);
+    }
+
+    public bool IsLightingEnabled
+    {
+        get => GetValue(IsLightingEnabledProperty);
+        set => SetValue(IsLightingEnabledProperty, value);
+    }
+
+    public Vector2 MaxPanOffset
+    {
+        get => GetValue(MaxPanOffsetProperty);
+        set => SetValue(MaxPanOffsetProperty, value);
     }
 
     public float ModelDistance
@@ -223,7 +241,9 @@ public sealed class SkinViewer3D : OpenGlControlBase, ICustomHitTest
             EnableCape = IsCapeVisible,
             Animation = IsEnableAnimation,
             EnableTop = IsUpperLayerVisible,
-            EnableTopLayer3D = IsTopLayer3D
+            EnableTopLayer3D = IsTopLayer3D,
+            EnableLighting = IsLightingEnabled,
+            MaxPanOffset = MaxPanOffset
         };
 
         _skin.Error += (_, type) =>
@@ -310,6 +330,17 @@ public sealed class SkinViewer3D : OpenGlControlBase, ICustomHitTest
 
             RequestNextFrameRendering();
         }
+
+        if (change.Property == IsLightingEnabledProperty)
+        {
+            if (_skin != null)
+                _skin.EnableLighting = IsLightingEnabled;
+
+            RequestNextFrameRendering();
+        }
+
+        if (change.Property == MaxPanOffsetProperty && _skin != null)
+            _skin.MaxPanOffset = MaxPanOffset;
 
         if (change.Property == HeadRotationProperty) RequestNextFrameRendering();
 
