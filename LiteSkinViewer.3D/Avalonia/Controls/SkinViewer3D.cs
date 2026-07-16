@@ -62,6 +62,7 @@ public sealed class SkinViewer3D : OpenGlControlBase, ICustomHitTest
         AvaloniaProperty.Register<SkinViewer3D, Vector2>(nameof(ModelPosition), DefaultModelPosition);
 
     private float _modelDistance;
+    private bool _renderingFailed;
     private OpenGLSkinViewerBase? _skin;
 
     private DateTime _time;
@@ -70,6 +71,11 @@ public sealed class SkinViewer3D : OpenGlControlBase, ICustomHitTest
     {
         _modelDistance = ModelDistance;
     }
+
+    /// <summary>
+    ///     皮肤渲染失败
+    /// </summary>
+    public event Action<object?, Exception>? RenderingFailed;
 
     public string Skin
     {
@@ -255,6 +261,22 @@ public sealed class SkinViewer3D : OpenGlControlBase, ICustomHitTest
 
     protected override void OnOpenGlRender(GlInterface gl, int fb)
     {
+        if (_renderingFailed)
+            return;
+
+        try
+        {
+            RenderSkin(gl, fb);
+        }
+        catch (Exception ex)
+        {
+            _renderingFailed = true;
+            RenderingFailed?.Invoke(this, ex);
+        }
+    }
+
+    private void RenderSkin(GlInterface gl, int fb)
+    {
         var width = (int)Bounds.Width;
         var height = (int)Bounds.Height;
         if (_skin != null)
@@ -291,8 +313,11 @@ public sealed class SkinViewer3D : OpenGlControlBase, ICustomHitTest
         base.OnPropertyChanged(change);
 
         if (change.Property == SkinProperty || change.Property == CapeProperty)
+        {
+            _renderingFailed = false;
             if (_skin != null)
                 ChangeSkin(Skin ?? "", Cape ?? "");
+        }
 
         if (change.Property == RenderModeProperty)
         {
