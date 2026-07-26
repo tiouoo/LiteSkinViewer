@@ -98,7 +98,7 @@ public sealed class FullBodyCapturer : ICapturer
     {
         const int RAW_W = 136, RAW_H = 266;
         var skintype = SkinHelper.DetectSkin(skin);
-        var frame = new SKBitmap(RAW_W, RAW_H);
+        using var frame = new SKBitmap(RAW_W, RAW_H);
 
         skin.CopyBlock(frame, 8, 8, 8, 8, 4 + 8 * 4, 4, 8, 8);
         skin.CopyBlock(frame, 20, 20, 8, 12, 4 + 8 * 4, 4 + 8 * 8, 8, 8);

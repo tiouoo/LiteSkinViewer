@@ -17,7 +17,7 @@ public sealed class HeadCapturer : ICapturer
         const int HAT_SRC_X = 40;
         const int HAT_SRC_Y = 8;
 
-        var canvas = new SKBitmap(CANVAS_SIZE, CANVAS_SIZE);
+        using var canvas = new SKBitmap(CANVAS_SIZE, CANVAS_SIZE);
         skin.CopyBlock(canvas, HEAD_SRC_X, HEAD_SRC_Y, HEAD_BLOCK,
             HEAD_BLOCK, 4, 4, HEAD_BLOCK, HEAD_BLOCK);
 
